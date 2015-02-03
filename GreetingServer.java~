@@ -1,0 +1,69 @@
+import java.net.*;	//import proper libraries
+import java.io.*;	//import the io capability
+
+import java.util.*;	//import utilities (possibly for an ArrayList of PERSON OBJECTS???)
+
+public class GreetingServer extends Thread	//use threads for this application
+{
+   private ServerSocket serverSocket;	//socket for the server to send messages through
+   
+   public GreetingServer(int port) throws IOException
+   {
+      serverSocket = new ServerSocket(port);	//init the socket to speak through the port, hardcoded to 54321
+      serverSocket.setSoTimeout(60000);	//timeout after one minute of waiting
+   }
+
+   public void run()	//running thread
+   {
+      while(true)	//while running
+      {
+         try
+         {
+            System.out.println("I, the server, am waiting for client on port " +
+            serverSocket.getLocalPort() + "...");	//message for waiting
+
+            Socket server = serverSocket.accept();	//create the socket by accepting connection
+
+            System.out.println("I, the server, just connected to "
+                  + server.getRemoteSocketAddress());	//print details of client connection
+
+            DataInputStream in =
+                  new DataInputStream(server.getInputStream());	//read input from client(?)
+
+            System.out.println(in.readUTF());		//print messages
+
+            DataOutputStream out =
+                 new DataOutputStream(server.getOutputStream());	//output stream of data, goes TO the client
+
+            out.writeUTF("Client, thank you for connecting to "
+              + server.getLocalSocketAddress() + "\nGoodbye!");
+
+            server.close();
+
+         }
+	 catch(SocketTimeoutException s)
+         {
+            System.out.println("Socket timed out!");
+            break;
+         }
+	 catch(IOException e)
+         {
+            e.printStackTrace();
+            break;
+         }
+      }
+   }
+   public static void main(String [] args)
+   {
+      int port = 54321;
+      try
+      {
+         Thread t = new GreetingServer(port);
+         t.start();
+      }
+      catch(IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
+}

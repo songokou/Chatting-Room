@@ -1,0 +1,46 @@
+// File Name GreetingClient.java
+
+import java.net.*;	//net libraries
+import java.io.*;	//io functions
+
+public class GreetingClient
+{
+   public static void main(String [] args)
+   {
+      String serverName = "127.0.0.1"; //connecting to local host for now
+
+      int port = 54321;	//matches the server's open port (hehehe)
+
+      try
+      {
+         System.out.println("I, the client, am connecting to " + serverName
+                             + " on port " + port);
+
+         Socket client = new Socket(serverName, port);	//create a new socket to communicate with server
+
+         System.out.println("I, the client, just connected to "
+                      + client.getRemoteSocketAddress());	//print message to client
+
+         OutputStream outToServer = client.getOutputStream();	//output stream for writing to server
+
+         DataOutputStream out =
+                       new DataOutputStream(outToServer);	//data output stream for writing to server
+
+         out.writeUTF("Hello server, I am a client from "
+                      + client.getLocalSocketAddress());	//write this message to the server
+
+         InputStream inFromServer = client.getInputStream();	//get message(s) from the server
+
+         DataInputStream in =
+                        new DataInputStream(inFromServer);	//put those messages in a stream
+
+         System.out.println("Server says: '" + in.readUTF() + "'");	//print back server's messages to the client
+
+         client.close();
+      }
+      catch(IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
+}

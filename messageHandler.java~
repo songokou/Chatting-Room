@@ -1,0 +1,12 @@
+import java.net.*;	//import proper libraries
+import java.io.*;	//import the io capability
+
+import java.util.*;	//import utilities (possibly for an ArrayList of PERSON OBJECTS???)
+
+public interface messageHanlder{
+
+	String message;
+	String userName;
+
+	void displayMessage(String msg, String uName);
+}
